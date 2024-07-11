@@ -24,4 +24,17 @@ jobs:
 
     - name: Run tests
       run: npm test
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build  # This ensures deploy runs only after build succeeds
 
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Deploy to Heroku
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      run: |
+        git remote add heroku https://git.heroku.com/node-ci-cd.git
+        git push heroku main
