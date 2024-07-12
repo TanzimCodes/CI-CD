@@ -48,4 +48,8 @@ jobs:
         run: |
           echo "$HEROKU_API_KEY" | heroku auth:token
           heroku whoami
+      
+      - name: Check if heroku still knows me
+        run:
+          heroku auth:token
 
