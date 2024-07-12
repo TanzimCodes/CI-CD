@@ -35,7 +35,13 @@ jobs:
     - name: Install Heroku CLI
       run: |
         curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
-
+    
+    - name: Print environment variables
+        run: |
+          echo "HEROKU_API_KEY: $HEROKU_API_KEY"
+          echo "Other environment variables:"
+          printenv
+    
     - name: Authenticate with Heroku
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
