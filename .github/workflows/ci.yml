@@ -42,17 +42,10 @@ jobs:
         run: |
           curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
 
-      - name: Set env
+      - name: Set env and then authenticate
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run:
-          echo "$HEROKU_API_KEY"
-      
-      - name: Acess env
-        run:
-          echo "$HEROKU_API_KEY"
-
-      - name : Authenticate heroku
         run: |
           echo "$HEROKU_API_KEY" | heroku auth:token
           heroku whoami
+
