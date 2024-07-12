@@ -33,7 +33,7 @@ jobs:
           heroku auth:whoami
           
           # Add Heroku remote
-          heroku git:remote -a node-ci-cd
+          git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/node-ci-cd.git
           
           # Push to Heroku
           git push heroku main
