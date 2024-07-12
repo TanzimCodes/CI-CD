@@ -11,12 +11,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Print secrets
-        run: echo "HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}"
-      - name: Print all environment variables
-        run: |
-          echo "All environment variables:"
-          env
+    - name: Debug secrets
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      run: |
+        echo $HEROKU_API_KEY
+        printenv
     # steps:
     # - name: Checkout code
     #   uses: actions/checkout@v3  # Update to the latest version
