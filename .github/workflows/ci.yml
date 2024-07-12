@@ -7,30 +7,6 @@ on:
     branches: [main]
 
 jobs:
-  # build:
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #   - name: Debug secrets
-  #     env:
-  #       HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-  #     run: |
-  #       echo $HEROKU_API_KEY
-  #       printenv
-  # steps:
-  # - name: Checkout code
-  #   uses: actions/checkout@v3  # Update to the latest version
-
-  # - name: Set up Node.js
-  #   uses: actions/setup-node@v3  # Update to the latest version
-  #   with:
-  #     node-version: '16'  # Ensure you're using Node.js 16
-
-  # - name: Install dependencies
-  #   run: npm install
-
-  # - name: Run tests
-  #   run: npm test
   deploy:
     runs-on: ubuntu-latest
 
@@ -38,18 +14,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Heroku CLI
-        run: |
-          curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
 
-      - name: Set env and then authenticate
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy to Heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
-          echo "$HEROKU_API_KEY" | heroku auth:token
-          heroku whoami
-      
-      - name: Check if heroku still knows me
-        run:
-          heroku auth:token
-
+          # Authenticate to Heroku
+          echo $HEROKU_API_KEY | heroku auth:token
+          
+          # Verify authentication
+          heroku auth:whoami
+          
+          # Add Heroku remote
+          heroku git:remote -a node-ci-cd
+          
+          # Push to Heroku
+          git push heroku main
