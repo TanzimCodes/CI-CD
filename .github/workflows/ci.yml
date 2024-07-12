@@ -47,9 +47,17 @@ jobs:
     
     - name: Verify Heroku remote
       run: git remote -v
-    
+ 
+    - name: Debug Heroku remote setup
+      run: git remote show heroku
+
     - name: Set Git remote URL with authentication
-      run: |
-        git remote set-url heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/node-ci-cd.git
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      run: git remote set-url heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/node-ci-cd.git
+
+    - name: Verify Git remote URL
+      run: git remote -v
+
     - name: Deploy to Heroku
-      run: git push heroku main
+      run: git push heroku main 
