@@ -2,58 +2,52 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Debug secrets
-      env:
-        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-      run: |
-        echo $HEROKU_API_KEY
-        printenv
-    # steps:
-    # - name: Checkout code
-    #   uses: actions/checkout@v3  # Update to the latest version
-
-    # - name: Set up Node.js
-    #   uses: actions/setup-node@v3  # Update to the latest version
-    #   with:
-    #     node-version: '16'  # Ensure you're using Node.js 16
-
-    # - name: Install dependencies
-    #   run: npm install
-
-    # - name: Run tests
-    #   run: npm test
-  # deploy:
+  # build:
   #   runs-on: ubuntu-latest
-  #   needs: build
 
   #   steps:
-  #   - name: Checkout code
-  #     uses: actions/checkout@v3
+  #   - name: Debug secrets
+  #     env:
+  #       HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+  #     run: |
+  #       echo $HEROKU_API_KEY
+  #       printenv
+  # steps:
+  # - name: Checkout code
+  #   uses: actions/checkout@v3  # Update to the latest version
+
+  # - name: Set up Node.js
+  #   uses: actions/setup-node@v3  # Update to the latest version
+  #   with:
+  #     node-version: '16'  # Ensure you're using Node.js 16
+
+  # - name: Install dependencies
+  #   run: npm install
+
+  # - name: Run tests
+  #   run: npm test
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Heroku CLI
+        run: |
+          curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+
+      - name: Authenticate with Heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          echo "$HEROKU_API_KEY" | heroku auth:token
       
-  #   - name: Install Heroku CLI
-  #     run: |
-  #       curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
-    
-  #   - name: Print environment variables
-  #     run: |
-  #         echo "HEROKU_API_KEY: $HEROKU_API_KEY"
-  #         echo "Other environment variables:"
-  #         printenv
-    
-    # - name: Authenticate with Heroku
-    #   env:
-    #     HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-    #   run: |
-    #     echo "$HEROKU_API_KEY" | heroku auth:token
-    # - name: Check whoami
-    #   run:
-    #     heroku whoami
+      - name: Check whoami
+        run: heroku whoami
