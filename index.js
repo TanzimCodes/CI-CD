@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
@@ -17,7 +18,7 @@ app.post('/api/data', (req, res) => {
 });
 
 // Start server
-app.listen(port, () => {
-  console.log(`Server started on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`);
 });
 
